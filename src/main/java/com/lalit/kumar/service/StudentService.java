@@ -1,8 +1,8 @@
-package com.amarjeet.singh.service;
+package com.lalit.kumar.service;
 
 import java.util.List;
 
-import com.amarjeet.singh.entity.Student;
+import com.lalit.kumar.entity.Student;
 
 public interface StudentService {
 	Student saveStudent(Student student);

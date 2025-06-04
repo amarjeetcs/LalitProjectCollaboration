@@ -1,8 +1,8 @@
-package com.amarjeet.singh.service.impl;
+package com.lalit.kumar.service.impl;
 
-import com.amarjeet.singh.entity.Student;
-import com.amarjeet.singh.repository.StudentRepository;
-import com.amarjeet.singh.service.StudentService;
+import com.lalit.kumar.entity.Student;
+import com.lalit.kumar.repository.StudentRepository;
+import com.lalit.kumar.service.StudentService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
