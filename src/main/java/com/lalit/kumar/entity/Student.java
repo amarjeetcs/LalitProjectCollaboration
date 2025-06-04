@@ -1,4 +1,4 @@
-package com.amarjeet.singh.entity;
+package com.lalit.kumar.entity;
 
 import jakarta.persistence.*;
 

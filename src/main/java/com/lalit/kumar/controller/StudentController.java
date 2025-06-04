@@ -1,7 +1,7 @@
-package com.amarjeet.singh.controller;
+package com.lalit.kumar.controller;
 
-import com.amarjeet.singh.entity.Student;
-import com.amarjeet.singh.service.StudentService;
+import com.lalit.kumar.entity.Student;
+import com.lalit.kumar.service.StudentService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
