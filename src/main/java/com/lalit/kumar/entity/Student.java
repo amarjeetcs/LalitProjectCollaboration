@@ -1,15 +1,13 @@
 package com.lalit.kumar.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "Lalit")
+@Table(name = "students")
 public class Student {
 
     @Id
@@ -25,5 +23,4 @@ public class Student {
     private String company;
     private double salary;
     private String country;
-
 }

@@ -338,15 +338,11 @@ package com.lalit.kumar.controller;
 import com.lalit.kumar.dto.StudentDTO;
 import com.lalit.kumar.entity.Student;
 import com.lalit.kumar.service.StudentService;
-
-import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.*;
 import io.swagger.v3.oas.annotations.responses.*;
 import io.swagger.v3.oas.annotations.tags.Tag;
-
 import jakarta.validation.Valid;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.validation.annotation.Validated;
@@ -357,11 +353,10 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/students")
+@Validated  // ✅ Required for method-level validation
 @Tag(name = "Student", description = "CRUD operations for managing students")
-@Validated
+@Log4j2
 public class StudentController {
-
-	private static final Logger logger = LogManager.getLogger(StudentController.class);
 
 	@Autowired
 	private StudentService studentService;
@@ -373,7 +368,7 @@ public class StudentController {
 			@ApiResponse(responseCode = "400", description = "Validation failed")
 	})
 	public ResponseEntity<Student> createStudent(@Valid @RequestBody StudentDTO dto) {
-		logger.info("Creating student: {}", dto.getName());
+		log.info("Creating student: {}", dto.getName());
 		Student student = convertToEntity(dto);
 		return ResponseEntity.status(HttpStatus.CREATED).body(studentService.saveStudent(student));
 	}
@@ -381,6 +376,7 @@ public class StudentController {
 	@PostMapping("/addAll")
 	@Operation(summary = "Add multiple students")
 	public ResponseEntity<List<Student>> saveAllStudents(@Valid @RequestBody List<@Valid StudentDTO> dtos) {
+		log.info("Creating {} students", dtos.size());
 		List<Student> students = dtos.stream().map(this::convertToEntity).collect(Collectors.toList());
 		return ResponseEntity.status(HttpStatus.CREATED).body(studentService.saveAllStudents(students));
 	}
@@ -395,18 +391,14 @@ public class StudentController {
 	@Operation(summary = "Get student by ID")
 	public ResponseEntity<Student> getById(@PathVariable Long id) {
 		Student student = studentService.getStudentById(id);
-		if (student == null)
-			return ResponseEntity.notFound().build();
-		return ResponseEntity.ok(student);
+		return student != null ? ResponseEntity.ok(student) : ResponseEntity.notFound().build();
 	}
 
 	@PutMapping("/{id}")
 	@Operation(summary = "Update student by ID")
 	public ResponseEntity<Student> update(@PathVariable Long id, @Valid @RequestBody StudentDTO dto) {
 		Student updated = studentService.updateStudent(id, convertToEntity(dto));
-		if (updated == null)
-			return ResponseEntity.notFound().build();
-		return ResponseEntity.ok(updated);
+		return updated != null ? ResponseEntity.ok(updated) : ResponseEntity.notFound().build();
 	}
 
 	@DeleteMapping("/{id}")
@@ -417,7 +409,7 @@ public class StudentController {
 	}
 
 	private Student convertToEntity(StudentDTO dto) {
-		return new Student(null, dto.getName(), dto.getGender(), dto.getAge(),
+		return new Student(dto.getId(), dto.getName(), dto.getGender(), dto.getAge(),
 				dto.getCity(), dto.getEmail(), dto.getNumber(),
 				dto.getCompany(), dto.getSalary(), dto.getCountry());
 	}
