@@ -1,55 +1,93 @@
-# CRUD Application - Spring Boot
+# 📚 CRUD Application - Spring Boot
 
-This is a simple **Spring Boot-based CRUD application** that demonstrates the creation, retrieval, update, and deletion of student records using RESTful APIs.
+This is a simple **Spring Boot-based CRUD application** that demonstrates creating, retrieving, updating, and deleting student records using RESTful APIs.
 
-## ✅ Features Implemented:
+---
+## 📫 API Endpoints Overview
+
+| Method | Endpoint              | Description           |
+|--------|-----------------------|-----------------------|
+| POST   | `/api/students`       | Create new student    |
+| GET    | `/api/students`       | Get all students      |
+| GET    | `/api/students/{id}`  | Get student by ID     |
+| PUT    | `/api/students/{id}`  | Update student        |
+| DELETE | `/api/students/{id}`  | Delete student        |
+
+
+## ✅ Features Implemented
 
 1. **CRUD Operations**
-   - Create, Read, Update, Delete student entities.
-   - API endpoints exposed under `/api/students`.
+   - REST endpoints for Create, Read, Update, Delete operations
+   - Base URL: `/api/students`
 
-2. **DTO + Validation API**
-   - Used `@Valid` annotations with DTOs to validate inputs such as:
-     - Email format
-     - Age constraints
-     - Phone number format
-     - Required fields
+2. **DTO + Validation**
+   - Validates inputs using `@Valid` annotations on DTOs
+   - Email format, age range, phone number, and required fields are checked
 
-3. **Logging**
-   - Integrated Log4j2 for logging API requests and internal processing.
-   - Logs request status and debugging information.
+3. **Logging (Log4j2)**
+   - Integrated logging to track API calls and responses
 
-4. **ResponseEntity**
-   - All responses wrapped using `ResponseEntity` for better HTTP status control and response handling.
+4. **ResponseEntity Wrapper**
+   - All API responses are properly wrapped with `ResponseEntity` for better status handling
 
-5. **Actuator**
-   - Enabled Spring Boot Actuator to monitor application health and metrics.
-   - Accessible at:
+5. **Actuator Monitoring**
+   - Monitor application health and metrics
+   - Key endpoints:
      - `/actuator/health`
      - `/actuator/info`
      - `/actuator/metrics`
 
-6. **Lombok**
-   - Used Lombok annotations such as `@Data`, `@NoArgsConstructor`, `@AllArgsConstructor` to reduce boilerplate code for entity and DTO classes.
+6. **Swagger Integration**
+   - API documentation with Swagger UI via SpringDoc
+   - Visit: `http://localhost:8080/swagger-ui/index.html`
 
-7. **DevTools**
-   - Spring Boot DevTools added for automatic reload and better development experience.
+7. **Lombok**
+   - Reduces boilerplate code using annotations like `@Data`, `@Builder`, etc.
 
-8. **Swagger (SpringDoc OpenAPI)**
-   - Integrated Swagger UI for API documentation and testing.
-   - Accessible at: `http://localhost:8080/swagger-ui.html` or `/swagger-ui/index.html`
+8. **DevTools**
+   - Auto-restart and hot-reloading during development
 
-## 🔧 Tools & Technologies:
+9. **SonarQube Integration**
+   - Analyzes code quality, bugs, vulnerabilities, code smells
 
-- Java 17
-- Spring Boot 3.5.0
-- Spring Data JPA
-- MySQL Database
-- Maven
-- Swagger UI (springdoc-openapi)
-- Lombok
-- Spring Boot Actuator
-- Log4j2
-- Spring Boot DevTools
+10. **JaCoCo Integration**
+    - Measures test coverage and integrates with SonarQube
 
-## 📁 Directory Structure (Major)
+11. **JUnit 5 Testing**
+    - Unit tests using modern JUnit 5 framework
+
+---
+
+## 🔧 Tech Stack & Tools
+
+| Tool/Tech              | Description                           |
+|------------------------|---------------------------------------|
+| Java 17                | Programming Language                  |
+| Spring Boot 3.5.0      | Application Framework                 |
+| Spring Data JPA        | ORM & Persistence                     |
+| MySQL                  | Relational Database                   |
+| Swagger (SpringDoc)    | API Documentation                    |
+| Lombok                 | Boilerplate Reduction                 |
+| Log4j2                 | Logging Framework                     |
+| DevTools               | Auto-reload support                   |
+| Actuator               | Application Monitoring                |
+| **JUnit 5**            | Testing Framework                     |
+| **JaCoCo**             | Code Coverage Tool                    |
+| **SonarQube**          | Code Quality Analysis Tool            |
+---
+
+## 🔗 Key URLs
+
+- ✅ **Swagger UI**: [http://localhost:8080/swagger-ui/index.html](http://localhost:8080/swagger-ui/index.html)
+- 🧪 **JaCoCo HTML Report (Local)**: `target/site/jacoco/index.html`
+- 📊 **SonarQube Dashboard**: [http://localhost:9000](http://localhost:9000)
+  - Project Key: `crud-app`
+  - Login Token: `sqp_609b3ed59e63b164ac76a48e013e91235071f2a3` (configure in your Maven command)
+
+---
+
+## 🛠 Author
+
+**Amarjeet Kumar Singh**
+
+
