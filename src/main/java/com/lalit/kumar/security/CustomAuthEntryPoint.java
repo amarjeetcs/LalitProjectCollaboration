@@ -1,4 +1,4 @@
 package com.lalit.kumar.security;
 
-public class SecurityConfig {
+public class CustomAuthEntryPoint {
 }
