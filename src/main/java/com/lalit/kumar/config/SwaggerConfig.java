@@ -5,8 +5,9 @@ import io.swagger.v3.oas.annotations.info.Contact;
 import io.swagger.v3.oas.annotations.info.Info;
 import io.swagger.v3.oas.annotations.info.License;
 import io.swagger.v3.oas.annotations.servers.Server;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.context.annotation.Configuration;
+
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 @Configuration
 @OpenAPIDefinition(info = @Info(title = "Student Management API", description = "API for managing student data (CRUD operations)", version = "1.0", contact = @Contact(name = "Lalit Kumar", email = "lalitkumarcs4@gmail.com"), license = @License(name = "Apache 2.0", url = "http://springdoc.org")), servers = {
@@ -14,3 +15,4 @@ import org.springframework.context.annotation.Configuration;
 				@Tag(name = "Student", description = "Operations related to student entity") })
 public class SwaggerConfig {
 }
+
