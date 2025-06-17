@@ -10,7 +10,7 @@ import java.util.Date;
 @Component
 public class JwtUtil {
 
-    private final String SECRET = "MySuperSecretKeyForJwtMySuperSecretKeyForJwt"; // 256-bit
+    private final String SECRET = "MySuperSecretKeyForJwtMySuperSecretKeyForJwt"; // 256-bit key
     private final long EXPIRATION = 1000 * 60 * 60; // 1 hour
 
     private final Key key = Keys.hmacShaKeyFor(SECRET.getBytes());
