@@ -1,21 +1,29 @@
 package com.lalit.kumar.security;
 
+import com.lalit.kumar.entity.User;
+import com.lalit.kumar.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.*;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
+
+@RequiredArgsConstructor
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
 
+    private final UserRepository userRepository;
+
     @Override
-    public UserDetails loadUserByUsername(String username) {
-        if ("admin".equals(username)) {
-            return User.builder()
-                    .username("admin")
-                    .password("{noop}password") // No encoding for demo
-                    .roles("USER")
-                    .build();
-        } else {
-            throw new UsernameNotFoundException("User not found");
-        }
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+
+        return new org.springframework.security.core.userdetails.User(
+                user.getUsername(),
+                user.getPassword(),
+                Collections.singletonList(new SimpleGrantedAuthority(user.getRole()))
+        );
     }
 }

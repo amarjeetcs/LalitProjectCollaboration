@@ -1,12 +1,16 @@
 package com.lalit.kumar.controller;
 
-import com.lalit.kumar.security.JwtUtil;
-import com.lalit.kumar.security.CustomUserDetailsService;
+import com.lalit.kumar.entity.User;
+import com.lalit.kumar.repository.UserRepository;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
-import org.springframework.security.authentication.*;
-import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -17,23 +21,44 @@ public class AuthController {
     private AuthenticationManager authenticationManager;
 
     @Autowired
-    private CustomUserDetailsService userDetailsService;
+    private UserRepository userRepository;
 
     @Autowired
-    private JwtUtil jwtUtil;
+    private BCryptPasswordEncoder passwordEncoder;
+
+    @Autowired
+    private com.lalit.kumar.security.JwtUtil jwtUtil;
+
+    @PostMapping("/register")
+    public ResponseEntity<String> register(@RequestBody User user) {
+        if (userRepository.existsById(user.getUsername())) {
+            return ResponseEntity.badRequest().body("Username already exists");
+        }
+
+        // Encrypt password
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        userRepository.save(user);
+
+        return ResponseEntity.ok("User registered successfully");
+    }
 
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestBody AuthRequest request) {
-        authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword())
-        );
+        try {
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword())
+            );
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid username or password");
+        }
 
-        UserDetails userDetails = userDetailsService.loadUserByUsername(request.getUsername());
-        String token = jwtUtil.generateToken(userDetails.getUsername());
+        String token = jwtUtil.generateToken(request.getUsername());
         return ResponseEntity.ok(token);
     }
 
     @Data
+    @AllArgsConstructor
+    @NoArgsConstructor
     public static class AuthRequest {
         private String username;
         private String password;
