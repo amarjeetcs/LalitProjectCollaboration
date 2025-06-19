@@ -6,64 +6,92 @@ This is a simple **Spring Boot-based CRUD application** that demonstrates creati
 
 ## 📫 API Endpoints Overview
 
-| Method | Endpoint                    | Description             |
-|--------|-----------------------------|-------------------------|
-| POST   | `/api/students`             | Create new student      |
-| GET    | `/api/students`             | Get all students        |
-| GET    | `/api/students/pagination`  | Get paginated students  |
-| GET    | `/api/students/{id}`        | Get student by ID       |
-| PUT    | `/api/students/{id}`        | Update student          |
-| DELETE | `/api/students/{id}`        | Delete student          |
+### 🔹 Non-Versioned API (`/api/students`)
+
+| Method | Endpoint                             | Description                      |
+|--------|--------------------------------------|----------------------------------|
+| POST   | `/api/students/addData`              | Add a single student             |
+| POST   | `/api/students/addAll`               | Add multiple students            |
+| GET    | `/api/students`                      | Get all students                 |
+| GET    | `/api/students/pagination`           | Get paginated students           |
+| GET    | `/api/students/{id}`                 | Get student by ID                |
+| PUT    | `/api/students/{id}`                 | Update student                   |
+| DELETE | `/api/students/{id}`                 | Delete student                   |
+| GET    | `/api/students/external/{id}`        | Fetch student from external API  |
+
+### 🔹 Versioned API - V1 (`/api/v1/students`)
+
+| Method | Endpoint                 | Description               |
+|--------|--------------------------|---------------------------|
+| GET    | `/api/v1/students`       | Get all students (v1)     |
+| GET    | `/api/v1/students/{id}`  | Get student by ID (v1)    |
+| POST   | `/api/v1/students`       | Add student (v1)          |
+
+### 🔹 Versioned API - V2 (`/api/v2/students`)
+
+| Method | Endpoint                               | Description                        |
+|--------|----------------------------------------|------------------------------------|
+| GET    | `/api/v2/students`                    | Get all students (v2)              |
+| GET    | `/api/v2/students/pagination`         | Get paginated students (v2)        |
+| GET    | `/api/v2/students/{id}`               | Get student by ID (v2)             |
+| POST   | `/api/v2/students`                    | Add student (v2)                   |
+| POST   | `/api/v2/students/batch`              | Add multiple students (v2)         |
+| PUT    | `/api/v2/students/{id}`               | Update student (v2)                |
+| DELETE | `/api/v2/students/{id}`               | Delete student (v2)                |
 
 ---
 
 ## ✅ Features Implemented
 
 1. **CRUD Operations**
-   - REST endpoints for Create, Read, Update, Delete operations
-   - Base URL: `/api/students`
+   - Full Create, Read, Update, Delete functionality
 
 2. **Pagination Support** 🔄
-   - Fetch students with pagination using:
-     - `GET /api/students/pagination?page=0&size=5`
-   - Returns structured response with page number, size, total records, etc.
-   - Clean custom DTO used (`PageResponseDTO`) to avoid PageImpl warning
+   - Example: `GET /api/students/pagination?page=0&size=5`
 
 3. **DTO + Validation**
-   - Validates inputs using `@Valid` annotations on DTOs
-   - Email format, age range, phone number, and required fields are checked
+   - Validates email, age, phone number, etc. using `@Valid`
 
 4. **Logging (Log4j2)**
-   - Integrated logging to track API calls and responses
+   - Logs input/output, errors, flow
 
 5. **ResponseEntity Wrapper**
-   - All API responses are properly wrapped with `ResponseEntity` for better status handling
+   - All APIs use proper HTTP status codes
 
 6. **Actuator Monitoring**
-   - Monitor application health and metrics
-   - Key endpoints:
-     - `/actuator/health`
-     - `/actuator/info`
-     - `/actuator/metrics`
+   - Health and metrics endpoints exposed
 
 7. **Swagger Integration**
-   - API documentation with Swagger UI via SpringDoc
-   - Visit: `http://localhost:8080/swagger-ui/index.html`
+   - API documentation via Swagger UI
 
 8. **Lombok**
-   - Reduces boilerplate code using annotations like `@Data`, `@Builder`, etc.
+   - Annotations like `@Data`, `@Builder`, etc.
 
 9. **DevTools**
-   - Auto-restart and hot-reloading during development
+   - For hot reload during development
 
 10. **SonarQube Integration**
-    - Analyzes code quality, bugs, vulnerabilities, code smells
+    - Static code analysis and maintainability
 
 11. **JaCoCo Integration**
-    - Measures test coverage and integrates with SonarQube
+    - Code coverage reports
 
 12. **JUnit 5 Testing**
-    - Unit tests using modern JUnit 5 framework
+    - Unit and integration testing
+
+13. **Global Exception Handling** ⚠️
+    - Centralized error messages using `@ControllerAdvice`
+    - Handles:
+      - `DuplicateFieldException`
+      - `EntityNotFoundException`
+      - Validation errors
+
+14. **API Versioning** 🗂️
+    - Separate controllers for `/v1` and `/v2`
+    - Ensures backward compatibility
+
+15. **RestTemplate Integration** 🌐
+    - Consumes internal/external REST APIs
 
 ---
 
@@ -80,19 +108,20 @@ This is a simple **Spring Boot-based CRUD application** that demonstrates creati
 | Log4j2                 | Logging Framework                     |
 | DevTools               | Auto-reload support                   |
 | Actuator               | Application Monitoring                |
-| **JUnit 5**            | Testing Framework                     |
-| **JaCoCo**             | Code Coverage Tool                    |
-| **SonarQube**          | Code Quality Analysis Tool            |
+| JUnit 5                | Testing Framework                     |
+| JaCoCo                 | Code Coverage Tool                    |
+| SonarQube              | Code Quality Analysis Tool            |
+| RestTemplate           | Internal REST API Communication       |
 
 ---
 
 ## 🔗 Key URLs
 
 - ✅ **Swagger UI**: [http://localhost:8080/swagger-ui/index.html](http://localhost:8080/swagger-ui/index.html)
-- 🧪 **JaCoCo HTML Report (Local)**: `target/site/jacoco/index.html`
+- 🧪 **JaCoCo Report**: `target/site/jacoco/index.html`
 - 📊 **SonarQube Dashboard**: [http://localhost:9000](http://localhost:9000)
   - Project Key: `crud-app`
-  - Login Token: `sqp_609b3ed59e63b164ac76a48e013e91235071f2a3` (configure in your Maven command)
+  - Token: `sqp_609b3ed59e63b164ac76a48e013e91235071f2a3`
 
 ---
 
