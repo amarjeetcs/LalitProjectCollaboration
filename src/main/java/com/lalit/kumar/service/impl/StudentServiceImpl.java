@@ -1,152 +1,3 @@
-//package com.lalit.kumar.service.impl;
-//
-//import com.lalit.kumar.entity.Student;
-//import com.lalit.kumar.repository.StudentRepository;
-//import com.lalit.kumar.service.StudentService;
-//
-//import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.stereotype.Service;
-//
-//import java.util.List;
-//
-//@Service
-//public class StudentServiceImpl implements StudentService {
-//
-//	@Autowired
-//	private StudentRepository studentRepository;
-//
-//	@Override
-//	public Student saveStudent(Student student) {
-//		return studentRepository.save(student);
-//	}
-//
-//	@Override
-//	public List<Student> saveAllStudents(List<Student> students) {
-//		return studentRepository.saveAll(students);
-//	}
-//
-//	@Override
-//	public List<Student> getAllStudents() {
-//		return studentRepository.findAll();
-//	}
-//
-//	@Override
-//	public Student getStudentById(Long id) {
-//		return studentRepository.findById(id).orElse(null);
-//	}
-//
-//	@Override
-//	public Student updateStudent(Long id, Student updatedStudent) {
-//	    Student student = getStudentById(id);
-//	    if (student != null) {
-//	        student.setName(updatedStudent.getName());
-//	        student.setGender(updatedStudent.getGender());
-//	        student.setAge(updatedStudent.getAge());
-//	        student.setCity(updatedStudent.getCity());
-//	        student.setEmail(updatedStudent.getEmail());
-//	        student.setNumber(updatedStudent.getNumber());
-//	        student.setCompany(updatedStudent.getCompany());
-//	        student.setSalary(updatedStudent.getSalary());
-//	        student.setCountry(updatedStudent.getCountry());
-//	        return studentRepository.save(student);
-//	    }
-//	    return null;
-//	}
-//
-//
-//	@Override
-//	public void deleteStudent(Long id) {
-//		studentRepository.deleteById(id);
-//	}
-//}
-//========================================below code with exception handling
-//package com.lalit.kumar.service.impl;
-//
-//import com.lalit.kumar.entity.Student;
-//import com.lalit.kumar.exception.DuplicateFieldException;
-//import com.lalit.kumar.repository.StudentRepository;
-//import com.lalit.kumar.service.StudentService;
-//import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.stereotype.Service;
-//
-//import java.util.List;
-//
-//@Service
-//public class StudentServiceImpl implements StudentService {
-//
-//	@Autowired
-//	private StudentRepository studentRepository;
-//
-//	@Override
-//	public Student saveStudent(Student student) {
-//		if (studentRepository.existsByEmail(student.getEmail())) {
-//			throw new DuplicateFieldException("Email already exists: " + student.getEmail());
-//		}
-//		if (studentRepository.existsByNumber(student.getNumber())) {
-//			throw new DuplicateFieldException("Phone number already exists: " + student.getNumber());
-//		}
-//		return studentRepository.save(student);
-//	}
-//
-//	@Override
-//	public List<Student> saveAllStudents(List<Student> students) {
-//		for (Student student : students) {
-//			if (studentRepository.existsByEmail(student.getEmail())) {
-//				throw new DuplicateFieldException("Email already exists: " + student.getEmail());
-//			}
-//			if (studentRepository.existsByNumber(student.getNumber())) {
-//				throw new DuplicateFieldException("Phone number already exists: " + student.getNumber());
-//			}
-//		}
-//		return studentRepository.saveAll(students);
-//	}
-//
-//	@Override
-//	public List<Student> getAllStudents() {
-//		return studentRepository.findAll();
-//	}
-//
-//	@Override
-//	public Student getStudentById(Long id) {
-//		return studentRepository.findById(id).orElse(null);
-//	}
-//
-//	@Override
-//	public Student updateStudent(Long id, Student updatedStudent) {
-//		Student student = getStudentById(id);
-//		if (student != null) {
-//			// Optional: add duplicate check for update
-//			if (!student.getEmail().equals(updatedStudent.getEmail()) &&
-//					studentRepository.existsByEmail(updatedStudent.getEmail())) {
-//				throw new DuplicateFieldException("Email already exists: " + updatedStudent.getEmail());
-//			}
-//
-//			if (!student.getNumber().equals(updatedStudent.getNumber()) &&
-//					studentRepository.existsByNumber(updatedStudent.getNumber())) {
-//				throw new DuplicateFieldException("Phone number already exists: " + updatedStudent.getNumber());
-//			}
-//
-//			student.setName(updatedStudent.getName());
-//			student.setGender(updatedStudent.getGender());
-//			student.setAge(updatedStudent.getAge());
-//			student.setCity(updatedStudent.getCity());
-//			student.setEmail(updatedStudent.getEmail());
-//			student.setNumber(updatedStudent.getNumber());
-//			student.setCompany(updatedStudent.getCompany());
-//			student.setSalary(updatedStudent.getSalary());
-//			student.setCountry(updatedStudent.getCountry());
-//			return studentRepository.save(student);
-//		}
-//		return null;
-//	}
-//
-//	@Override
-//	public void deleteStudent(Long id) {
-//		studentRepository.deleteById(id);
-//	}
-//}
-//=========================with logging
-
 package com.lalit.kumar.service.impl;
 
 import com.lalit.kumar.entity.Student;
@@ -156,6 +7,10 @@ import com.lalit.kumar.service.StudentService;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -262,4 +117,12 @@ public class StudentServiceImpl implements StudentService {
 		studentRepository.deleteById(id);
 		log.info("Student deleted successfully with ID: {}", id);
 	}
+
+	@Override
+	public Page<Student> getStudentsWithPagination(int page, int size) {
+		log.info("Fetching students with pagination - Page: {}, Size: {}", page, size);
+		Pageable pageable = PageRequest.of(page, size);
+		return studentRepository.findAll(pageable);
+	}
+
 }

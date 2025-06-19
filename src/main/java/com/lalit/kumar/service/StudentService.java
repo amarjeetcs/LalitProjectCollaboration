@@ -3,6 +3,7 @@ package com.lalit.kumar.service;
 import java.util.List;
 
 import com.lalit.kumar.entity.Student;
+import org.springframework.data.domain.Page;
 
 public interface StudentService {
 	Student saveStudent(Student student);
@@ -16,4 +17,6 @@ public interface StudentService {
 	Student updateStudent(Long id, Student updatedStudent);
 
 	void deleteStudent(Long id);
+	Page<Student> getStudentsWithPagination(int page, int size);
+
 }

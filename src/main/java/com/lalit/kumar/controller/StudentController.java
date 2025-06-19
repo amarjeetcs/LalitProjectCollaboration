@@ -1,5 +1,6 @@
 package com.lalit.kumar.controller;
 
+import com.lalit.kumar.dto.PageResponseDTO;
 import com.lalit.kumar.dto.StudentDTO;
 import com.lalit.kumar.entity.Student;
 import com.lalit.kumar.service.StudentService;
@@ -10,11 +11,13 @@ import jakarta.validation.Valid;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-
+import org.springframework.data.domain.Page;
 import java.util.List;
 import java.util.stream.Collectors;
+
 @CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/api/students")
@@ -26,7 +29,26 @@ public class StudentController {
 	@Autowired
 	private StudentService studentService;
 
+	@GetMapping("/pagination")
+	public ResponseEntity<PageResponseDTO<Student>> getStudentsWithPagination(
+			@RequestParam(defaultValue = "0") int page,
+			@RequestParam(defaultValue = "5") int size) {
+
+		Page<Student> pageResult = studentService.getStudentsWithPagination(page, size);
+
+		PageResponseDTO<Student> response = new PageResponseDTO<>();
+		response.setContent(pageResult.getContent());
+		response.setPageNumber(pageResult.getNumber());
+		response.setPageSize(pageResult.getSize());
+		response.setTotalElements(pageResult.getTotalElements());
+		response.setTotalPages(pageResult.getTotalPages());
+		response.setLast(pageResult.isLast());
+
+		return ResponseEntity.ok(response);
+	}
+
 	@PostMapping("/addData")
+	@PreAuthorize("hasAnyRole('USER', 'ADMIN')")
 	@Operation(summary = "Add a single student")
 	@ApiResponses({
 			@ApiResponse(responseCode = "201", description = "Student created"),
@@ -41,6 +63,7 @@ public class StudentController {
 	}
 
 	@PostMapping("/addAll")
+	@PreAuthorize("hasAnyRole('USER', 'ADMIN')")
 	@Operation(summary = "Add multiple students")
 	public ResponseEntity<List<Student>> saveAllStudents(@Valid @RequestBody List<@Valid StudentDTO> dtos) {
 		log.info("Received request to add {} students", dtos.size());
@@ -51,6 +74,7 @@ public class StudentController {
 	}
 
 	@GetMapping
+	@PreAuthorize("hasAnyRole('USER', 'ADMIN')")
 	@Operation(summary = "Get all students")
 	public ResponseEntity<List<Student>> getAll() {
 		log.info("Received request to fetch all students");
@@ -60,6 +84,7 @@ public class StudentController {
 	}
 
 	@GetMapping("/{id}")
+	@PreAuthorize("hasAnyRole('USER', 'ADMIN')")
 	@Operation(summary = "Get student by ID")
 	public ResponseEntity<Student> getById(@PathVariable Long id) {
 		log.info("Fetching student with ID: {}", id);
@@ -74,6 +99,7 @@ public class StudentController {
 	}
 
 	@PutMapping("/{id}")
+	@PreAuthorize("hasRole('ADMIN')")
 	@Operation(summary = "Update student by ID")
 	public ResponseEntity<Student> update(@PathVariable Long id, @Valid @RequestBody StudentDTO dto) {
 		log.info("Request to update student with ID: {}", id);
@@ -88,6 +114,7 @@ public class StudentController {
 	}
 
 	@DeleteMapping("/{id}")
+	@PreAuthorize("hasRole('ADMIN')")
 	@Operation(summary = "Delete student by ID")
 	public ResponseEntity<String> delete(@PathVariable Long id) {
 		log.info("Request to delete student with ID: {}", id);
